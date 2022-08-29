@@ -1,7 +1,7 @@
 from vkbottle import API
 from vk_user import VkUser, user_vk
 import configparser
-import asyncio
+# import asyncio
 
 
 config = configparser.ConfigParser()
@@ -11,46 +11,62 @@ user_token = config['VK']['user_token']
 api = API(token=user_token)
 
 
-async def search_options(vk_user: VkUser) -> list:
-    """
-    Searches options.
-    :param: vk_user: VkUser
-    :return: list of options
-    """
-    list_of_options = [] 
-    vk_user = user_vk
-    for options in vk_user.searching_parameters():
-        list_of_options.append(options)
-    return list_of_options  
-
-standart_options_list = asyncio.run(search_options(VkUser))
-
-
 async def top_3_photos(option_id: int) -> list:
     """
     Returns 3 photos with most amount of likes
     :param: option_id: vk user id.
     :return: top profile photos
     """
+    photos = await api.photos.get_all(owner_id=option_id)
+    photos_count = photos.count 
 
-    photos = await api.photos.get_all(owner_id=option_id, count=30, extended=1)
+    offset = 0 
+    while offset < photos_count:
+        photos = await api.photos.get_all(owner_id=option_id, count=10, offset=offset, extended=1)
+        offset += 10 
+        photos = photos.items    
     
-    like_list = []
-    max_count_like_list = []
-    photos_list= []  
+        like_list = []
+        max_count_like_list = []
 
-    for photo in photos.items:
-        like_list.append(photo.likes.count) 
+        for photo in photos:         
+            like_list.append(photo.likes.count) 
+        like_list.sort()
+        max_count_like_list += like_list[-3:]
 
-    like_list.sort()
-    max_count_like_list += like_list[-3:]
-
-    for photo in photos.items:
-        if photo.likes.count in max_count_like_list:
-            photos_list.append(f'photo{option_id}_{photo.id}')                   
-    return photos_list
+        top_photos_list= []
+        for photo in photos:              
+            if photo.likes.count in max_count_like_list:
+                top_photos_list.append(f'photo{photo.owner_id}_{photo.id}')
     
-# top_photos = asyncio.run(top_3_photos(1))
+        return top_photos_list    
+
+
+async def search_options(vk_user: VkUser) -> list:
+    """
+    Searches options.
+    :param: vk_user: VkUser
+    :return: list of options
+    """  
+    list_of_options = []
+
+    options = await api.users.search(hometown=vk_user.city, sex=vk_user.gender, age_from = vk_user.age_from, age_to = vk_user.age_to, status = 6, offset=vk_user.offset)
+    options_count = options.count    
+
+    if vk_user.gender == 2:                        
+        gender = 1                               
+    elif vk_user.gender == 1:
+        gender = 2
+    else:
+        gender = 0
+
+    while vk_user.offset < options_count:
+        options = await api.users.search(hometown=vk_user.city, sex=gender, age_from = vk_user.age_from, age_to = vk_user.age_to, status = 6, count = 2, offset=vk_user.offset)
+        vk_user.offset += 2
+        options = options.items 
+
+        list_of_options += [option for option in options if not option.is_closed]
+    return list_of_options   
 
 
 async def show_option(vk_user: VkUser) -> list:
@@ -59,32 +75,17 @@ async def show_option(vk_user: VkUser) -> list:
     :param vk_user: VkUser
     :return: option [first_name, last_name, link_to_profile, [photos]]
     """
-    full_options_search = []
-    standart_options = standart_options_list
-    add_options = []
 
-    vk_user = user_vk
-    for options in vk_user.option_list:
-        if options:
-            add_options.append(options)
-        else:
-            break
+    if not vk_user.option_list:
+        search_result = await search_options(vk_user)
+        option_list = search_result
+        vk_user.extend_option_list(option_list)
+    option = vk_user.next_option()
+    photos = await top_3_photos(option.id)
+    message = [option.first_name, option.last_name, f'vk.com/id{option.id}', photos]
+    return message
 
-    full_options_search = [*standart_options, *add_options]
 
-    if full_options_search[1] == 'мужской':
-        full_options_search[1] = 2
-    elif full_options_search[1] == 'женский':
-        full_options_search[1] = 1
-    else: 
-        full_options_search[1] = 0 
 
-    user_list = []
-    
-    users = await api.users.search(hometown=full_options_search[0], sex=full_options_search[1], age_from = full_options_search[2], age_to = full_options_search[3], count = 10)
-    for user in users.items:
-        user_list.append([f'{user.first_name}, {user.last_name}, vk.com/id{user.id}'])
-    
-    print (user_list) 
 
-show_option_user = asyncio.run(show_option(VkUser))
+# print(asyncio.run(show_option(user_vk)))
