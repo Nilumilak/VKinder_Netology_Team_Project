@@ -23,7 +23,7 @@ async def create_user(message: Message):
     """
     user = await group_bot.api.users.get(message.from_id, fields=['sex', 'city'])
     if message.from_id not in VkUser.user_dict:
-        VkUser.user_dict[message.from_id] = VkUser(user[0].id, user[0].sex, user[0].city)
+        VkUser.user_dict[message.from_id] = VkUser(user[0].id, user[0].sex.value, user[0].city)
     await first_launch(message)
 
 
@@ -35,7 +35,7 @@ async def first_launch(message: Message):
     """
     vk_user = VkUser.user_dict[message.from_id]
     if not vk_user.city:    # if city was not defined in user profile
-        await message.answer('Введите ваш город:')
+        await message.answer('Введите город для поиска:')
         await group_bot.state_dispenser.set(message.peer_id, RegData.CITY)
     elif not vk_user.age_from:
         await message.answer('Введите диапазон поиска по возрасту.\nВозраст от:')
@@ -137,7 +137,7 @@ async def city(message: Message):
         if cities.count == 1 or cities.items[0].title.lower() == message.text.lower():
             ctx.set('city', message.text)
             VkUser.user_dict[message.from_id].city = cities.items[0].id
-            await message.answer(f'Ваш город: {cities.items[0].title}')
+            await message.answer(f'Выбран город: {cities.items[0].title}')
             await first_launch(message)
         else:
             await message.answer(
