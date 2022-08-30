@@ -19,19 +19,14 @@ async def top_3_photos(option_id: int) -> list:
     """
  
     photos = await api.photos.get(owner_id=option_id, album_id='profile', extended=1)  
-    photos = photos.items      
-       
-    like_list = []
-    for photo in photos:         
-        like_list.append(photo.likes.count) 
-    like_list.sort()
-    like_list = like_list[-3:]    
+    photos_list = photos.items      
+    photos_list.sort(key=lambda x: x.likes.count) 
+    photos_list = photos_list[-3:]
 
-    top_photos_list= []
-    for photo in photos:              
-        if photo.likes.count in like_list:
-            top_photos_list.append(f'photo{photo.owner_id}_{photo.id}')
-
+    top_photos_list = []  
+    for photo in photos_list:      
+        top_photos_list.append(f'photo{photo.owner_id}_{photo.id}')    
+   
     return top_photos_list 
 
 
