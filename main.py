@@ -133,15 +133,15 @@ async def city(message: Message):
     :return:
     """
     cities = await utils.get_city_id(message.text)
-    if cities.items:
-        if cities.count == 1 or cities.items[0].title.lower() == message.text.lower():
+    if cities:
+        if cities.count == 1 or cities[0].title.lower() == message.text.lower():
             ctx.set('city', message.text)
-            VkUser.user_dict[message.from_id].city = cities.items[0].id
-            await message.answer(f'Выбран город: {cities.items[0].title}')
+            VkUser.user_dict[message.from_id].city = cities[0].id
+            await message.answer(f'Выбран город: {cities[0].title}')
             await first_launch(message)
         else:
             await message.answer(
-                f'Пожалуйста уточните какой именно город ваш:\n {", ".join(city.title for city in cities.items)}.')
+                f'Пожалуйста уточните какой именно город ваш:\n {", ".join(city.title for city in cities)}.')
             await group_bot.state_dispenser.set(message.peer_id, RegData.CITY)
     else:
         await message.answer('Такой город не найден, попробуйте еще раз')

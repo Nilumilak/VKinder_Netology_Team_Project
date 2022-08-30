@@ -10,6 +10,16 @@ user_token = config['VK']['user_token']
 api = API(token=user_token)
 
 
+async def get_city_id(city_name: str) -> list:
+    """
+    Gets cities ids
+    :param city_name: name of city
+    :return: list of ids that matches to the city_name
+    """
+    city_id = await api.database.get_cities(country_id=1, q=city_name)
+    return city_id.items
+
+
 async def show_option(vk_user: VkUser) -> list:
     """
     Gives next option from vk_user option_list
