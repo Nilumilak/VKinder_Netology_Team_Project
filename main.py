@@ -23,7 +23,7 @@ async def create_user(message: Message):
     """
     user = await group_bot.api.users.get(message.from_id, fields=['sex', 'city'])
     if message.from_id not in VkUser.user_dict:
-        VkUser.user_dict[message.from_id] = VkUser(user[0].id, user[0].sex.value, user[0].city)
+        VkUser.user_dict[message.from_id] = VkUser(user[0].id, user[0].sex.value, user[0].city.id if user[0].city else None)
     await first_launch(message)
 
 
@@ -43,7 +43,7 @@ async def first_launch(message: Message):
     else:
         await next_option(message)
 
-
+@group_bot.on.message(text='/next')
 @group_bot.on.private_message(payload={"cmd": "next"})
 async def next_option(message: Message):
     """
@@ -60,7 +60,7 @@ async def next_option(message: Message):
 
     vk_user = VkUser.user_dict[message.from_id]
     option = await utils.show_option(vk_user)
-    await message.answer('\n'.join(option[:3]), attachment=option[3], keyboard=keyboard)
+    await message.answer('\n'.join(option[:3]), attachment=option[3], keyboard=keyboard.get_json())
 
 
 @group_bot.on.private_message(payload={"cmd": "add"})
@@ -100,7 +100,7 @@ async def age_from(message: Message):
         ctx.set('age_from', message.text)
         await group_bot.state_dispenser.set(message.peer_id, RegData.AGE_TO)
         VkUser.user_dict[message.from_id].age_from = message.text
-        return 'Возраст до:'
+        await message.answer('Возраст до:')
     else:
         await message.answer('Ввод с клавиатуры должен содержать только цифры')
         await group_bot.state_dispenser.set(message.peer_id, RegData.AGE_FROM)
