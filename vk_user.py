@@ -1,4 +1,4 @@
-from vkinder_db import add_favorite_to_db, add_photo_to_db, get_favorites
+# from vkinder_db import add_favorite_to_db, add_photo_to_db, get_favorites
 
 class VkUser:
     user_dict = {}
@@ -39,18 +39,20 @@ class VkUser:
         """
         Adds option to favorites
         """
-        add_favorite_to_db()
-        add_photo_to_db()        
+        # add_favorite_to_db()
+        # add_photo_to_db() 
+        ...       
 
 
     def show_favorites(self) -> list:
         """
         Shows list of favorites options
         """
-        list_of_favorits = get_favorites()
-        return list_of_favorits()
+        # list_of_favorits = get_favorites()
+        # return list_of_favorits
+        ...
 
 
 
 
-# user_vk = VkUser(97600258, 1 ,'Смоленск', 65, 70)
+user_vk = VkUser(97600258, 1 ,'Смоленск', 20, 30)
