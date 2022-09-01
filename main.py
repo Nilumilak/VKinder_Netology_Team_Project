@@ -44,7 +44,6 @@ async def first_launch(message: Message):
         await next_option(message)
 
 
-@group_bot.on.message(text='/next')
 @group_bot.on.private_message(payload={"cmd": "next"})
 async def next_option(message: Message):
     """
@@ -64,7 +63,6 @@ async def next_option(message: Message):
     await message.answer('\n'.join(option[:3]), attachment=option[3], keyboard=keyboard)
 
 
-@group_bot.on.message(text='/add')
 @group_bot.on.private_message(payload={"cmd": "add"})
 def add_favorite(message: Message):
     """
@@ -75,7 +73,6 @@ def add_favorite(message: Message):
     ...
 
 
-@group_bot.on.message(text='/show_favorites')
 @group_bot.on.private_message(payload={"cmd": "show"})
 async def show_favorites(message: Message):
     """
@@ -122,7 +119,7 @@ async def age_to(message: Message):
         await first_launch(message)
     else:
         await message.answer('Ввод с клавиатуры должен содержать только цифры')
-        await group_bot.state_dispenser.set(message.peer_id, RegData.AGE_FROM)
+        await group_bot.state_dispenser.set(message.peer_id, RegData.AGE_TO)
 
 
 @group_bot.on.message(state=RegData.CITY)
