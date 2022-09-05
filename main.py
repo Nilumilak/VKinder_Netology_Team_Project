@@ -14,6 +14,13 @@ group_token = config['VK']['group_token']
 group_bot = Bot(token=group_token)
 ctx = CtxStorage()
 
+keyboard = (Keyboard(one_time=True)
+                .add(Text('Next', {"cmd": "next"}), color=KeyboardButtonColor.PRIMARY)
+                .row()
+                .add(Text('Block', {"cmd": "block"}), color=KeyboardButtonColor.NEGATIVE)
+                .add(Text('Show favorites', {"cmd": "show"}), color=KeyboardButtonColor.SECONDARY)
+                .add(Text('Favorites', {"cmd": "add"}), color=KeyboardButtonColor.POSITIVE))
+
 
 @group_bot.on.message(text='/start')
 async def create_user(message: Message):
@@ -46,7 +53,6 @@ async def first_launch(message: Message):
         await next_option(message)
 
 
-@group_bot.on.message(text='/next')
 @group_bot.on.message(payload={"cmd": "next"})
 async def next_option(message: Message):
     """
@@ -54,20 +60,13 @@ async def next_option(message: Message):
     :param: message: incoming message
     :return:
     """
-    keyboard = (Keyboard(one_time=True)
-                .add(Text('Next', {"cmd": "next"}), color=KeyboardButtonColor.PRIMARY)
-                .row()
-                .add(Text('Block', {"cmd": "block"}), color=KeyboardButtonColor.NEGATIVE)
-                .add(Text('Show favorites', {"cmd": "show"}), color=KeyboardButtonColor.SECONDARY)
-                .add(Text('Favorites', {"cmd": "add"}), color=KeyboardButtonColor.POSITIVE))
-
     vk_user = VkUser.user_dict[message.from_id]
     option = await utils.show_option(vk_user)
-    await message.answer('\n'.join(option[:3]), attachment=option[3], keyboard=keyboard.get_json())
+    await message.answer('\n'.join(option[:3]), attachment=option[3], keyboard=keyboard)
 
 
 @group_bot.on.message(payload={"cmd": "add"})
-def add_favorite(message: Message):
+async def add_favorite(message: Message):
     """
     Saves option to favorites.
     :param: message: incoming message
@@ -75,6 +74,7 @@ def add_favorite(message: Message):
     """
     vk_user = VkUser.user_dict[message.from_id]
     vk_user.add_favorite()
+    await message.answer('добавлено в избранные', keyboard=keyboard)
 
 
 @group_bot.on.message(payload={"cmd": "show"})
@@ -86,7 +86,7 @@ async def show_favorites(message: Message):
     """
     vk_user = VkUser.user_dict[message.from_id]
     favorites = vk_user.show_favorites()
-    await message.answer('\n'.join(favorites))
+    await message.answer('\n'.join(favorites), keyboard=keyboard)
 
 
 class RegData(BaseStateGroup):
