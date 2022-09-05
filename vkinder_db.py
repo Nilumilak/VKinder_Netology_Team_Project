@@ -61,7 +61,8 @@ def add_photo_to_db(photo_list: list, favorite_id: int) -> bool:
 def get_favorites(user_id):
     session = Session()
     try:
-        users = [[user.user_id, user.name, user.surname] for user in session.query(Favorite).all() if user.favorite_for_id == user_id]
+        users = [[user.user_id, user.name, user.surname] for user in session.query(Favorite).all() if
+                 user.favorite_for_id == user_id]
         return users
     except Exception as e:
         print(e)
@@ -98,8 +99,3 @@ def get_blacklist(user_id):
 
 engine = connect_to_db()
 Session = sessionmaker(bind=engine)
-
-
-
-
-
