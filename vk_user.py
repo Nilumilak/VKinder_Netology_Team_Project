@@ -15,7 +15,7 @@ class VkUser:
         self.age_from = None
         self.age_to = None
         self.option_list = []
-        self.current_option_list = [] 
+        self.current_option = None 
         self.current_user_foto = []
         self.offset = 0
 
@@ -32,18 +32,18 @@ class VkUser:
         Gives next option.
         :return: option
         """
-        self.current_option_list = self.option_list
-        return self.current_option_list.pop()
+        self.current_option = self.option_list.pop()
+        return self.current_option
 
     def add_favorite(self):
         """
         Adds option to favorites
         """
-        add_favorite_to_db(self.user_id, self.current_option_list.id)
-        add_photo_to_db(self.current_option_list.id, self.current_user_foto) 
+        add_favorite_to_db(self.user_id, self.current_option.id)
+        add_photo_to_db(self.current_option.id, self.current_user_foto) 
 
     def show_favorites(self) -> list:
         """
         Shows list of favorites options
         """
-        return get_favorites(self.current_option_list.id)
+        return get_favorites(self.current_option.id)
