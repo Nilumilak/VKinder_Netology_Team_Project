@@ -71,6 +71,6 @@ async def show_option(vk_user: VkUser) -> list:
         option_list = search_result
         vk_user.extend_option_list(option_list)
     option = vk_user.next_option()
-    photos = await top_3_photos(option.id)
-    message = [option.first_name, option.last_name, f'vk.com/id{option.id}', photos]
+    vk_user.current_user_foto = await top_3_photos(option.id)    
+    message = [option.first_name, option.last_name, f'vk.com/id{option.id}', vk_user.current_user_foto]
     return message
