@@ -30,10 +30,10 @@ def add_user_to_db(user_id: int, name: str, surname: str, gender: str) -> bool:
         session.close()
 
 
-def add_favorite_to_db(user_id: int, favorite_for_id: int) -> bool:
+def add_favorite_to_db(user_id: int, favorite_for_id: int, name: str, surname: str) -> bool:
     session = Session()
     try:
-        user = Favorite(user_id=user_id, favorite_for_id=favorite_for_id)
+        user = Favorite(user_id=user_id, favorite_for_id=favorite_for_id, name=name, surname=surname)
         session.add(user)
         session.commit()
         return True
@@ -61,7 +61,7 @@ def add_photo_to_db(photo_list: list, favorite_id: int) -> bool:
 def get_favorites(user_id):
     session = Session()
     try:
-        users = [user.user_id for user in session.query(Favorite).all() if user.favorite_for_id == user_id]
+        users = [[user.user_id, user.name, user.surname] for user in session.query(Favorite).all() if user.favorite_for_id == user_id]
         return users
     except Exception as e:
         print(e)
@@ -99,19 +99,7 @@ def get_blacklist(user_id):
 engine = connect_to_db()
 Session = sessionmaker(bind=engine)
 
-# add_user_to_db(user_id=112, name='Egor', surname='Sm', gender='male', age=33, city='Nov')
-# add_user_to_db(user_id=228, name='Камила', surname='Го', gender='male', age=23, city='Nov')
-# add_favorite_to_db(user_id=228, favorite_for_id=112)
-#
-# session = Session()
-# for user in session.query(User).all():
-#     print(user)
-#
-# for user in session.query(Favorite).all():
-#     print(user)
-#
-# print(get_favorites(112))
-# session.close()
+
 
 
 

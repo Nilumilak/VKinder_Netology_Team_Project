@@ -21,6 +21,8 @@ class Favorite(Base):
 
     user_id = sq.Column(sq.Integer, primary_key=True)
     favorite_for_id = sq.Column(sq.Integer, sq.ForeignKey("users.user_id"))
+    name = sq.Column(sq.String(length=20))
+    surname = sq.Column(sq.String(length=40))
 
     favorite_for_user = relationship(User, backref='favorites')
 
@@ -31,7 +33,8 @@ class Favorite(Base):
 class Photo(Base):
     __tablename__ = 'photos'
 
-    photo_id = sq.Column(sq.Integer, primary_key=True)
+    id = sq.Column(sq.Integer, primary_key=True)
+    photo_id = sq.Column(sq.String(length=60))
     favorite_id = sq.Column(sq.Integer, sq.ForeignKey("favorites.user_id"))
 
     favorite_photo = relationship(Favorite, backref='photos')
