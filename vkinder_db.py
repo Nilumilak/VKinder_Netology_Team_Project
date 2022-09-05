@@ -16,7 +16,7 @@ def connect_to_db():
     return engine
 
 
-def add_user_to_db(user_id: int, name: str, surname: str, gender: str) -> bool:
+def add_user_to_db(user_id: int, name: str, surname: str, gender: int) -> bool:
     session = Session()
     try:
         user = User(user_id=user_id, name=name, surname=surname, gender=gender)

@@ -10,7 +10,7 @@ class User(Base):
     user_id = sq.Column(sq.Integer, primary_key=True)
     name = sq.Column(sq.String(length=20))
     surname = sq.Column(sq.String(length=40))
-    gender = sq.Column(sq.String(length=6))
+    gender = sq.Column(sq.Integer)
 
     def __str__(self):
         return f'{self.user_id}: {self.name} {self.surname}'
