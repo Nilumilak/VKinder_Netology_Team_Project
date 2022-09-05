@@ -39,7 +39,7 @@ class VkUser:
         """
         Adds option to favorites
         """
-        add_favorite_to_db(self.user_id, self.current_option.id)
+        add_favorite_to_db(self.user_id, self.current_option.id, self.current_option.first_name, self.current_option.last_name)
         add_photo_to_db(self.current_option.id, self.current_user_foto) 
 
     def show_favorites(self) -> list:
