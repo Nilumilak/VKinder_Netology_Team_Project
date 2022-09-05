@@ -46,4 +46,4 @@ class VkUser:
         """
         Shows list of favorites options
         """
-        return get_favorites(self.current_option.id)
+        return get_favorites(self.user_id)
