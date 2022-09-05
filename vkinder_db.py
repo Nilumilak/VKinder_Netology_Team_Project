@@ -2,22 +2,24 @@ import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
 from db_models import create_tables, User, Favorite, Photo, BlackList
+import configparser
 
 
 def connect_to_db():
-    with open('db_settings.ini', 'r', encoding='utf-8') as f:
-        user = f.readline().strip()
-        password = f.readline().strip()
+    config = configparser.ConfigParser()
+    config.read('settings.ini')
+    user = config['DB']['user']
+    password = config['DB']['password']
     DSN = f'postgresql://{user}:{password}@localhost:5432/vkinder_db'
     engine = sqlalchemy.create_engine(DSN)
     create_tables(engine)
     return engine
 
 
-def add_user_to_db(user_id: int, name: str, surname: str, gender: str, age: int, city: str) -> bool:
+def add_user_to_db(user_id: int, name: str, surname: str, gender: str) -> bool:
     session = Session()
     try:
-        user = User(user_id=user_id, name=name, surname=surname, gender=gender, age=age, city=city)
+        user = User(user_id=user_id, name=name, surname=surname, gender=gender)
         session.add(user)
         session.commit()
         return True

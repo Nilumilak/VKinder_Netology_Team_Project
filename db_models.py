@@ -11,8 +11,6 @@ class User(Base):
     name = sq.Column(sq.String(length=20))
     surname = sq.Column(sq.String(length=40))
     gender = sq.Column(sq.String(length=6))
-    age = sq.Column(sq.Integer)
-    city = sq.Column(sq.String(length=20))
 
     def __str__(self):
         return f'{self.user_id}: {self.name} {self.surname}'
