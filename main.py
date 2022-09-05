@@ -3,6 +3,7 @@ import configparser
 from vkbottle.bot import Bot, Message
 from vkbottle import CtxStorage, BaseStateGroup, Keyboard, KeyboardButtonColor, Text
 from vk_user import VkUser
+from vkinder_db import add_user_to_db
 import utils
 
 
@@ -24,6 +25,7 @@ async def create_user(message: Message):
     user = await group_bot.api.users.get(message.from_id, fields=['sex', 'city'])
     if message.from_id not in VkUser.user_dict:
         VkUser.user_dict[message.from_id] = VkUser(user[0].id, user[0].sex.value, user[0].city.id if user[0].city else None)
+        add_user_to_db(user[0].id, user[0].first_name, user[0].last_name, user[0].sex.value)
     await first_launch(message)
 
 
@@ -71,7 +73,8 @@ def add_favorite(message: Message):
     :param: message: incoming message
     :return:
     """
-    ...
+    vk_user = VkUser.user_dict[message.from_id]
+    vk_user.add_favorite()
 
 
 @group_bot.on.message(payload={"cmd": "show"})
@@ -81,7 +84,9 @@ async def show_favorites(message: Message):
     :param message: incoming message
     :return:
     """
-    ...
+    vk_user = VkUser.user_dict[message.from_id]
+    favorites = vk_user.show_favorites()
+    await message.answer('\n'.join(favorites))
 
 
 class RegData(BaseStateGroup):
