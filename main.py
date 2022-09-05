@@ -86,7 +86,7 @@ async def show_favorites(message: Message):
     """
     vk_user = VkUser.user_dict[message.from_id]
     favorites = vk_user.show_favorites()
-    await message.answer('\n'.join(favorites), keyboard=keyboard)
+    await message.answer(favorites, keyboard=keyboard)
 
 
 class RegData(BaseStateGroup):
