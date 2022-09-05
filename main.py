@@ -43,8 +43,9 @@ async def first_launch(message: Message):
     else:
         await next_option(message)
 
+
 @group_bot.on.message(text='/next')
-@group_bot.on.private_message(payload={"cmd": "next"})
+@group_bot.on.message(payload={"cmd": "next"})
 async def next_option(message: Message):
     """
     Shows next option.
@@ -63,7 +64,7 @@ async def next_option(message: Message):
     await message.answer('\n'.join(option[:3]), attachment=option[3], keyboard=keyboard.get_json())
 
 
-@group_bot.on.private_message(payload={"cmd": "add"})
+@group_bot.on.message(payload={"cmd": "add"})
 def add_favorite(message: Message):
     """
     Saves option to favorites.
@@ -73,7 +74,7 @@ def add_favorite(message: Message):
     ...
 
 
-@group_bot.on.private_message(payload={"cmd": "show"})
+@group_bot.on.message(payload={"cmd": "show"})
 async def show_favorites(message: Message):
     """
     Shows favorites.
