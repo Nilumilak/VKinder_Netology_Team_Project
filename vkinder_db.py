@@ -16,7 +16,7 @@ def connect_to_db():
     return engine
 
 
-def add_user_to_db(user_id: int, name: str, surname: str, gender: str) -> bool:
+def add_user_to_db(user_id: int, name: str, surname: str, gender: int) -> bool:
     session = Session()
     try:
         user = User(user_id=user_id, name=name, surname=surname, gender=gender)
@@ -30,10 +30,10 @@ def add_user_to_db(user_id: int, name: str, surname: str, gender: str) -> bool:
         session.close()
 
 
-def add_favorite_to_db(user_id: int, favorite_for_id: int) -> bool:
+def add_favorite_to_db(user_id: int, favorite_for_id: int, name: str, surname: str) -> bool:
     session = Session()
     try:
-        user = Favorite(user_id=user_id, favorite_for_id=favorite_for_id)
+        user = Favorite(user_id=user_id, favorite_for_id=favorite_for_id, name=name, surname=surname)
         session.add(user)
         session.commit()
         return True
