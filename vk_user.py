@@ -33,6 +33,8 @@ class VkUser:
         :return: option
         """
         self.current_option = self.option_list.pop()
+        if not self.option_list:
+            self.offset = 0
         return self.current_option
 
     def add_favorite(self):
