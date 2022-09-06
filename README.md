@@ -40,3 +40,6 @@ pip install -r requirements.txt
 ```
 python main.py
 ```
+
+## Для начала работы бота
+В чат группы написать команду "\start" 
