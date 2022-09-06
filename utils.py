@@ -61,6 +61,8 @@ async def search_options(vk_user: VkUser) -> list:
     options = await api.users.search(city=vk_user.city, sex=gender, age_from=vk_user.age_from, age_to=age_to,
                                      status=6, count=100, offset=vk_user.offset, fields=['city'])
     vk_user.offset += 100
+    if not self.option_list:
+            self.offset = 0
     options = options.items
 
     return [option for option in options if (not option.is_closed) and (option.city) and (option.city.id == vk_user.city)]
