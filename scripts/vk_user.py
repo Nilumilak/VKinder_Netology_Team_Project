@@ -1,4 +1,5 @@
-from vkinder_db import add_favorite_to_db, add_photo_to_db, get_favorites, add_user_to_blacklist, get_blacklist
+from database.vkinder_db import add_favorite_to_db, add_photo_to_db, get_favorites, add_user_to_blacklist
+
 
 class VkUser:
     user_dict = {}

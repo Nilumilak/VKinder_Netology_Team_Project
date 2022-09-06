@@ -1,6 +1,6 @@
 from vkbottle import API
-from vk_user import VkUser
-from vkinder_db import get_blacklist
+from .vk_user import VkUser
+from database.vkinder_db import get_blacklist
 import configparser
 
 config = configparser.ConfigParser()

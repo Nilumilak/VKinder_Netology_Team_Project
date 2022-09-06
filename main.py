@@ -2,9 +2,9 @@ import configparser
 
 from vkbottle.bot import Bot, Message
 from vkbottle import CtxStorage, BaseStateGroup, Keyboard, KeyboardButtonColor, Text
-from vk_user import VkUser
-from vkinder_db import add_user_to_db
-import utils
+from scripts.vk_user import VkUser
+from database.vkinder_db import add_user_to_db
+from scripts import utils
 
 
 config = configparser.ConfigParser()
@@ -163,4 +163,5 @@ async def city(message: Message):
         await group_bot.state_dispenser.set(message.peer_id, RegData.CITY)
 
 
-group_bot.run_forever()
+if __name__ == '__main__':
+    group_bot.run_forever()

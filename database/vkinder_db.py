@@ -1,7 +1,7 @@
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 
-from db_models import create_tables, User, Favorite, Photo, BlackList
+from .db_models import create_tables, User, Favorite, Photo, BlackList
 import configparser
 
 
