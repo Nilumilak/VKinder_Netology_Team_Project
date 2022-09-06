@@ -88,7 +88,7 @@ def add_user_to_blacklist(user_id, blocked_for_id):
 def get_blacklist(user_id):
     session = Session()
     try:
-        users = [user.user_id for user in session.query(BlackList).all() if user.favorite_for_id == user_id]
+        users = [user.user_id for user in session.query(BlackList).all() if user.blocked_for_id == user_id]
         return users
     except Exception as e:
         print(e)

@@ -1,4 +1,4 @@
-from vkinder_db import add_favorite_to_db, add_photo_to_db, get_favorites
+from vkinder_db import add_favorite_to_db, add_photo_to_db, get_favorites, add_user_to_blacklist, get_blacklist
 
 class VkUser:
     user_dict = {}
@@ -49,3 +49,9 @@ class VkUser:
         favorites = get_favorites(self.user_id)
         favorites = '\n'.join(['vk.com/id' + str(favorite[0]) + ' ' + favorite[1] + ' ' + favorite[2] for favorite in favorites])
         return favorites
+
+    def block_option(self):
+        """
+        Adds option to blacklist.
+        """
+        add_user_to_blacklist(self.current_option.id, self.user_id)

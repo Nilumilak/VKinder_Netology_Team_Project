@@ -89,6 +89,18 @@ async def show_favorites(message: Message):
     await message.answer(favorites, keyboard=keyboard)
 
 
+@group_bot.on.message(payload={"cmd": "block"})
+async def block_option(message: Message):
+    """
+    Adds option to blacklist.
+    :param message: incoming message
+    :return:
+    """
+    vk_user = VkUser.user_dict[message.from_id]
+    vk_user.block_option()
+    await message.answer('добавлено в список заблокированных пользователей', keyboard=keyboard)
+
+
 class RegData(BaseStateGroup):
     AGE_FROM = 0
     AGE_TO = 1
