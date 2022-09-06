@@ -1,5 +1,6 @@
 from vkbottle import API
 from vk_user import VkUser
+from vkinder_db import get_blacklist
 import configparser
 
 config = configparser.ConfigParser()
@@ -51,12 +52,23 @@ async def search_options(vk_user: VkUser) -> list:
     else:
         gender = 0
 
-    options = await api.users.search(city=vk_user.city, sex=gender, age_from=vk_user.age_from, age_to=vk_user.age_to,
-                                     status=6, count=100, offset=vk_user.offset)
+    if vk_user.age_to < vk_user.age_from:
+        age_to = vk_user.age_from
+        age_from = vk_user.age_to
+    else:
+        age_from = vk_user.age_from
+        age_to = vk_user.age_to
+
+    options = await api.users.search(city=vk_user.city, sex=gender, age_from=age_from, age_to=age_to,
+                                     status=6, count=100, offset=vk_user.offset, fields=['city'])
     vk_user.offset += 100
+    if not options:
+        vk_user.offset = 0
     options = options.items
 
-    return [option for option in options if not option.is_closed]
+    return [option for option in options if (not option.is_closed)
+            and (option.city and option.city.id == vk_user.city)
+            and (option.id not in get_blacklist(vk_user.user_id))]
 
 
 async def show_option(vk_user: VkUser) -> list:
