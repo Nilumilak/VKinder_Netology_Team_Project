@@ -52,8 +52,10 @@ async def search_options(vk_user: VkUser) -> list:
         gender = 0
 
     if vk_user.age_to < vk_user.age_from:        
-        age_to = vk_user.age_from 
+        age_to = vk_user.age_from
+        age_from = vk_user.age_to
     else:
+        age_from = vk_user.age_from
         age_to = vk_user.age_to 
 
     options = await api.users.search(city=vk_user.city, sex=gender, age_from=vk_user.age_from, age_to=age_to,
